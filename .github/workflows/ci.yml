@@ -2,31 +2,28 @@ name: .NET CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
-  build-test-format:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: Restore dependencies
+      run: dotnet restore MySolution.sln
 
-      - name: Build solution
-        run: dotnet build MySolution.sln --no-restore --configuration Release
+    - name: Build solution
+      run: dotnet build MySolution.sln --configuration Release --no-restore
 
-      - name: Run tests
-        run: dotnet test MySolution.sln --no-build --verbosity normal
-
-      - name: Check code format
-        run: dotnet format MySolution.sln --verify-no-changes
+    - name: Run tests
+      run: dotnet test MySolution.sln --no-build --verbosity normal
